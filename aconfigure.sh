@@ -1,12 +1,12 @@
 #! /usr/bin/env bash
 
 ## *****************************************************************************
-##  
-## Description : aconfigure is a script used for compiling autotools projects 
+##
+## Description : aconfigure is a script used for compiling autotools projects
 ##               for android.
 ##
 ##               Prerequisites:
-##               1. Setup android toolchains using README.md present in 
+##               1. Setup android toolchains using README.md present in
 ##                  cocosdk-java/jni 
 ##
 ## *****************************************************************************
@@ -73,7 +73,7 @@ do
     export STRIP=${ANDROID_TOOLCHAIN_BIN}/${COMPILER_PREFIX}-strip
 
     echo "---- Compiling for ${ARCH}"
-    ./configure --host="${COMPILER_PREFIX}" --prefix="${ANDROID_TOOLCHAIN_SYSROOT_DIR}/usr" CFLAGS="-g -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_JSON1=1 -DSQLITE_DEFAULT_FOREIGN_KEYS=1"
+    ./configure --host="${COMPILER_PREFIX}" --prefix="${ANDROID_TOOLCHAIN_SYSROOT_DIR}/usr" CFLAGS="-g -fPIC -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_JSON1=1 -DSQLITE_DEFAULT_FOREIGN_KEYS=1"
     make
     make install
 done
