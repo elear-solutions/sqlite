@@ -1,6 +1,5 @@
 from conans import ConanFile, AutoToolsBuildEnvironment, tools
 
-
 class SqlitelibConan(ConanFile):
     name = "sqlite"
     version = "0.1"
@@ -14,17 +13,16 @@ class SqlitelibConan(ConanFile):
     default_options = "shared=False"
     generators = "make"
 
-
     def build(self):
         autotools = AutoToolsBuildEnvironment(self)
         self.run("cd .. && autoreconf -fsi ")
-        autotools.configure(configure_dir="..",args=["--prefix=${PWD}"])
+        autotools.configure(configure_dir="..",args=[ "--prefix=${PWD}" ])
         autotools.make()
         autotools.install()
+
     def package(self):
         self.copy("*.h", dst="include", src="include")
         self.copy("*", dst="lib", src="lib")
 
     def package_info(self):
-        self.cpp_info.libs = ["sqlite"]
-
+        self.cpp_info.libs = [ "sqlite" ]
