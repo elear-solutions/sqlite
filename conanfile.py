@@ -9,7 +9,7 @@ class SqlitelibConan(ConanFile):
     description = "<Description of Sqlitelib here>"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
-    options = { "shared": [True, False] }
+    options = { "shared": [ True, False ] }
     default_options = "shared=False"
     generators = "make"
 
