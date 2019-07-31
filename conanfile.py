@@ -1,12 +1,11 @@
-from conans import ConanFile, AutoToolsBuildEnvironment, tools
+from conans import ConanFile, AutoToolsBuildEnvironment
 
 class SqlitelibConan(ConanFile):
     name = "sqlite"
-    version = "0.1"
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
     url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of Sqlitelib here>"
+    description = "This recipe file used to build and package binaries of sqlite repository"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
     options = { "shared": [ True, False ] }
