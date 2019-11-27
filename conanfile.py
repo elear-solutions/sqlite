@@ -15,7 +15,7 @@ class SqlitelibConan(ConanFile):
     def build(self):
         autotools = AutoToolsBuildEnvironment(self)
         self.run("cd .. && autoreconf -fsi ")
-        autotools.configure(configure_dir="..",args=["--prefix=${PWD}"])
+        autotools.configure(configure_dir="..",args=["--prefix=${PWD}", "--disable-static-shell"])
         autotools.make()
         autotools.install()
 
