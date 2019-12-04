@@ -10,6 +10,7 @@ class SqlitelibConan(ConanFile):
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
     exports_sources = ["CMakeLists.txt"]
+    generators = "cmake"
     options = {"shared": [True, False],
                "fPIC": [True, False],
                "threadsafe": [0, 1, 2],
