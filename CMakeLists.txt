@@ -4,6 +4,9 @@ project(sqlite3 C)
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup()
+else()
+  set(THREADSAFE 1)
+  set(BUILD_SHARED_LIBS TRUE)
 endif()
 
 # Add some options from https://sqlite.org/compile.html
