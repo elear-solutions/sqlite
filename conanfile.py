@@ -9,7 +9,6 @@ class SqlitelibConan(ConanFile):
     description = "This recipe file used to build and package binaries of sqlite repository"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
-    exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
     options = {"shared": [True, False],
                "fPIC": [True, False],
