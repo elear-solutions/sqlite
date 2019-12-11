@@ -76,8 +76,8 @@ class SqlitelibConan(ConanFile):
         cmake.install()
 
     def package(self):
-        self.copy("*.h", dst="include", src="include")
-        self.copy("*", dst="lib", src="lib")
+        self.copy("*.h", dst="include", src="package/include")
+        self.copy("*", dst="lib", src="package/lib")
 
     def package_info(self):
         self.cpp_info.libs = [ "sqlite" ]
