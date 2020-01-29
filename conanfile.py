@@ -2,12 +2,14 @@ import os
 from conans import ConanFile, CMake, tools
 
 class SqlitelibConan(ConanFile):
-    name = "sqlite"
+    name = "sqlite3"
+    version = "3.26.0"
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
-    url = "<Package recipe repository url here, for issues about the package>"
-    description = "This recipe file used to build and package binaries of sqlite repository"
-    topics = ("<Put some tag here>", "<here>", "<and here>")
+    url = "https://github.com/elear-solutions/sqlite"
+    homepage = "https://www.sqlite.org"
+    description = "Self-contained, serverless, in-process SQL database engine."
+    topics = ("sqlite", "database", "sql", "serverless")
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
     options = {"shared": [True, False],
@@ -80,4 +82,4 @@ class SqlitelibConan(ConanFile):
         self.copy("*", dst="lib", src="package/lib")
 
     def package_info(self):
-        self.cpp_info.libs = [ "sqlite" ]
+        self.cpp_info.libs = [ "sqlite3" ]
