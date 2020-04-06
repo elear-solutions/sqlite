@@ -32,7 +32,7 @@ class SqlitelibConan(ConanFile):
                        "enable_fts3": False,
                        "enable_fts4": False,
                        "enable_fts5": False,
-                       "enable_json1": False,
+                       "enable_json1": True,
                        "enable_rtree": False,
                        "omit_load_extension": False
                        }
