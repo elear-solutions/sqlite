@@ -46,7 +46,7 @@ class SqlitelibConan(ConanFile):
         del self.settings.compiler.cppstd
 
     def _configure_cmake(self):
-        cmake = CMake(self)
+        cmake = CMake(self, build_type = self.settings.build_type)
         cmake.definitions["THREADSAFE"] = self.options.threadsafe
         cmake.definitions["ENABLE_COLUMN_METADATA"] = self.options.enable_column_metadata
         cmake.definitions["ENABLE_EXPLAIN_COMMENTS"] = self.options.enable_explain_comments

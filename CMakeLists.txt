@@ -33,6 +33,11 @@ else()
   set(BUILD_SHARED_LIBS TRUE)
 endif()
 
+# Set global compilation flags at project elvel
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic-errors -Wall -std=c11 -D_GNU_SOURCE -Os")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
+set(CMAKE_C_FLAGS_RELEASE "-s -ffunction-sections -fdata-sections")
+
 # Add some options from https://sqlite.org/compile.html
 option(ENABLE_JSON1 "Enable JSON SQL functions")
 option(ENABLE_COLUMN_METADATA "Enable additional APIs that provide convenient access to meta-data about tables and queries")
