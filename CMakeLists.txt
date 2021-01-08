@@ -25,6 +25,9 @@
 cmake_minimum_required(VERSION 3.1.2)
 project(sqlite3 C)
 
+INCLUDE_DIRECTORIES(/usr/local/include)
+LINK_DIRECTORIES(/usr/local/lib)
+
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup()
@@ -32,6 +35,9 @@ else()
   set(THREADSAFE 1)
   set(BUILD_SHARED_LIBS TRUE)
 endif()
+
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic-errors -Wall -std=c99 -D_GNU_SOURCE -Os -ffunction-sections -fdata-sections -flto")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic-errors -Wall -std=c99 -D_GNU_SOURCE -Os -s -ffunction-sections -fdata-sections")
 
 # Add some options from https://sqlite.org/compile.html
 option(ENABLE_JSON1 "Enable JSON SQL functions")
@@ -49,14 +55,20 @@ option(HAVE_POSIX_FALLOCATE "Use posix_fallocate()")
 option(HAVE_STRERROR_R "Use strerror_r()")
 option(HAVE_USLEEP "Use usleep() system call to implement the xSleep method")
 
-add_library(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/sqlite3.c
+add_library(${PROJECT_NAME} SHARED ${CMAKE_SOURCE_DIR}/sqlite3.c
                             ${CMAKE_SOURCE_DIR}/sqlite3.h
                             ${CMAKE_SOURCE_DIR}/sqlite3ext.h)
+
+add_library(sqlite3_static STATIC ${CMAKE_SOURCE_DIR}/sqlite3.c
+                            ${CMAKE_SOURCE_DIR}/sqlite3.h
+                            ${CMAKE_SOURCE_DIR}/sqlite3ext.h)
+
 if (WIN32 AND MSVC AND BUILD_SHARED_LIBS)
     set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif(MSVC AND BUILD_SHARED_LIBS)
 if(ENABLE_JSON1)
     target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE_ENABLE_JSON1)
+    target_compile_definitions(sqlite3_static PRIVATE SQLITE_ENABLE_JSON1)
 endif()
 if(ENABLE_COLUMN_METADATA)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_COLUMN_METADATA)
@@ -103,6 +115,8 @@ install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
+
+install(TARGETS sqlite3_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
 install(FILES ${CMAKE_SOURCE_DIR}/sqlite3.h
               ${CMAKE_SOURCE_DIR}/sqlite3ext.h
