@@ -22,7 +22,8 @@ class SqlitelibConan(ConanFile):
                "enable_fts5": [True, False],
                "enable_json1": [True, False],
                "enable_rtree": [True, False],
-               "omit_load_extension": [True, False]
+               "omit_load_extension": [True, False],
+               "enable_memstatus": [0, 1]
                }
     default_options = {"shared": False,
                        "fPIC": True,
@@ -34,7 +35,8 @@ class SqlitelibConan(ConanFile):
                        "enable_fts5": False,
                        "enable_json1": True,
                        "enable_rtree": False,
-                       "omit_load_extension": False
+                       "omit_load_extension": False,
+                       "enable_memstatus": 0
                        }
 
     def config_options(self):
@@ -56,6 +58,7 @@ class SqlitelibConan(ConanFile):
         cmake.definitions["ENABLE_JSON1"] = self.options.enable_json1
         cmake.definitions["ENABLE_RTREE"] = self.options.enable_rtree
         cmake.definitions["OMIT_LOAD_EXTENSION"] = self.options.omit_load_extension
+        cmake.definitions["ENABLE_MEMSTATUS"] = self.options.enable_memstatus
         cmake.definitions["HAVE_FDATASYNC"] = True
         cmake.definitions["HAVE_GMTIME_R"] = True
         cmake.definitions["HAVE_LOCALTIME_R"] = True
