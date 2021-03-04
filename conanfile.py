@@ -23,7 +23,7 @@ class SqlitelibConan(ConanFile):
                "enable_json1": [True, False],
                "enable_rtree": [True, False],
                "omit_load_extension": [True, False],
-               "disable_memstatus": [0, 1]
+               "enable_memstatus": [0, 1]
                }
     default_options = {"shared": False,
                        "fPIC": True,
@@ -36,7 +36,7 @@ class SqlitelibConan(ConanFile):
                        "enable_json1": True,
                        "enable_rtree": False,
                        "omit_load_extension": False,
-                       "disable_memstatus": 0
+                       "enable_memstatus": 0
                        }
 
     def config_options(self):
@@ -58,13 +58,13 @@ class SqlitelibConan(ConanFile):
         cmake.definitions["ENABLE_JSON1"] = self.options.enable_json1
         cmake.definitions["ENABLE_RTREE"] = self.options.enable_rtree
         cmake.definitions["OMIT_LOAD_EXTENSION"] = self.options.omit_load_extension
+        cmake.definitions["ENABLE_MEMSTATUS"] = self.options.enable_memstatus
         cmake.definitions["HAVE_FDATASYNC"] = True
         cmake.definitions["HAVE_GMTIME_R"] = True
         cmake.definitions["HAVE_LOCALTIME_R"] = True
         cmake.definitions["HAVE_POSIX_FALLOCATE"] = True
         cmake.definitions["HAVE_STRERROR_R"] = True
         cmake.definitions["HAVE_USLEEP"] = True
-        cmake.definitions["DISABLE_MEMSTATUS"] = self.options.disable_memstatus
         if self.settings.os == "Windows":
             cmake.definitions["HAVE_LOCALTIME_R"] = False
             cmake.definitions["HAVE_POSIX_FALLOCATE"] = False

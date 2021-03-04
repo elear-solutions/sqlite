@@ -30,7 +30,7 @@ if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup()
 else()
   set(THREADSAFE 1)
-  set(DISABLE_MEMSTATUS 0)
+  set(ENABLE_MEMSTATUS 0)
   set(BUILD_SHARED_LIBS TRUE)
 endif()
 
@@ -49,7 +49,7 @@ option(HAVE_LOCALTIME_R "Use the threadsafe localtime_r()")
 option(HAVE_POSIX_FALLOCATE "Use posix_fallocate()")
 option(HAVE_STRERROR_R "Use strerror_r()")
 option(HAVE_USLEEP "Use usleep() system call to implement the xSleep method")
-option(DISABLE_MEMSTATUS "Disable the memory usage tracking")
+option(ENABLE_MEMSTATUS "Set it to enable the memory usage tracking")
 
 add_library(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/sqlite3.c
                             ${CMAKE_SOURCE_DIR}/sqlite3.h
@@ -99,7 +99,7 @@ endif()
 if(HAVE_USLEEP)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_USLEEP)
 endif()
-target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_DEFAULT_MEMSTATUS=${DISABLE_MEMSTATUS})
+target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_DEFAULT_MEMSTATUS=${ENABLE_MEMSTATUS})
 target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_THREADSAFE=${THREADSAFE})
 
 install(TARGETS ${PROJECT_NAME}
