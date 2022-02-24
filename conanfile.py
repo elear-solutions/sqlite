@@ -72,6 +72,8 @@ class SqlitelibConan(ConanFile):
             cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
         if self.settings.os == "Android":
             cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
+        if self.settings.os.distribution == "goke":
+            cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
         cmake.configure()
         return cmake
 
