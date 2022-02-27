@@ -65,6 +65,7 @@ class SqlitelibConan(ConanFile):
         cmake.definitions["HAVE_POSIX_FALLOCATE"] = True
         cmake.definitions["HAVE_STRERROR_R"] = True
         cmake.definitions["HAVE_USLEEP"] = True
+
         if self.settings.os == "Windows":
             cmake.definitions["HAVE_LOCALTIME_R"] = False
             cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
