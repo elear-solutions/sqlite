@@ -59,22 +59,7 @@ class SqlitelibConan(ConanFile):
         cmake.definitions["ENABLE_RTREE"] = self.options.enable_rtree
         cmake.definitions["OMIT_LOAD_EXTENSION"] = self.options.omit_load_extension
         cmake.definitions["ENABLE_MEMSTATUS"] = self.options.enable_memstatus
-        cmake.definitions["HAVE_FDATASYNC"] = True
-        cmake.definitions["HAVE_GMTIME_R"] = True
-        cmake.definitions["HAVE_LOCALTIME_R"] = True
-        cmake.definitions["HAVE_POSIX_FALLOCATE"] = True
-        cmake.definitions["HAVE_STRERROR_R"] = True
-        cmake.definitions["HAVE_USLEEP"] = True
 
-        if self.settings.os == "Windows":
-            cmake.definitions["HAVE_LOCALTIME_R"] = False
-            cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
-        if tools.is_apple_os(self.settings.os):
-            cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
-        if self.settings.os == "Android":
-            cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
-        if self.settings.os == "Linux" and self.settings.os.distribution == "goke":
-            cmake.definitions["HAVE_POSIX_FALLOCATE"] = False
         cmake.configure()
         return cmake
 

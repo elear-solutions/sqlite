@@ -34,6 +34,8 @@ else()
   set(BUILD_SHARED_LIBS TRUE)
 endif()
 
+include(CheckSymbolExists)
+
 # Add some options from https://sqlite.org/compile.html
 option(ENABLE_JSON1 "Enable JSON SQL functions")
 option(ENABLE_COLUMN_METADATA "Enable additional APIs that provide convenient access to meta-data about tables and queries")
@@ -43,13 +45,25 @@ option(ENABLE_FTS4 "Enable version 3 and 4 of the full-text search engine")
 option(ENABLE_FTS5 "Enable version 5 of the full-text search engine")
 option(ENABLE_RTREE "Enable support for the R*Tree index extension")
 option(OMIT_LOAD_EXTENSION "Omits the entire extension loading mechanism from SQLite")
-option(HAVE_FDATASYNC "Use fdatasync() instead of fsync() on unix systems")
-option(HAVE_GMTIME_R "Use the threadsafe gmtime_r()")
-option(HAVE_LOCALTIME_R "Use the threadsafe localtime_r()")
-option(HAVE_POSIX_FALLOCATE "Use posix_fallocate()")
-option(HAVE_STRERROR_R "Use strerror_r()")
-option(HAVE_USLEEP "Use usleep() system call to implement the xSleep method")
 option(ENABLE_MEMSTATUS "Set it to enable the memory usage tracking")
+
+check_symbol_exists(fdatasync "unistd.h" HAVE_FDATASYNC)
+MESSAGE(STATUS "HAVE_FDATASYNC: ${HAVE_FDATASYNC}")
+
+check_symbol_exists(usleep "unistd.h" HAVE_USLEEP)
+MESSAGE(STATUS "HAVE_USLEEP: ${HAVE_USLEEP}")
+
+check_symbol_exists(localtime_r "time.h" HAVE_LOCALTIME_R)
+MESSAGE(STATUS "HAVE_LOCALTIME_R: ${HAVE_LOCALTIME_R}")
+
+check_symbol_exists(gmtime_r "time.h" HAVE_GMTIME_R)
+MESSAGE(STATUS "HAVE_GMTIME_R: ${HAVE_GMTIME_R}")
+
+check_symbol_exists(strerror_r "time.h" HAVE_STRERROR_R)
+MESSAGE(STATUS "HAVE_STRERROR_R: ${HAVE_STRERROR_R}")
+
+check_symbol_exists(posix_fallocate "fcntl.h" HAVE_POSIX_FALLOCATE)
+MESSAGE(STATUS "HAVE_POSIX_FALLOCATE: ${HAVE_POSIX_FALLOCATE}")
 
 add_library(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/sqlite3.c
                             ${CMAKE_SOURCE_DIR}/sqlite3.h
