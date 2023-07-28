@@ -34,6 +34,8 @@ else()
   set(BUILD_SHARED_LIBS TRUE)
 endif()
 
+include(CheckSymbolExists)
+
 # Add some options from https://sqlite.org/compile.html
 option(ENABLE_JSON1 "Enable JSON SQL functions")
 option(ENABLE_COLUMN_METADATA "Enable additional APIs that provide convenient access to meta-data about tables and queries")
@@ -43,66 +45,106 @@ option(ENABLE_FTS4 "Enable version 3 and 4 of the full-text search engine")
 option(ENABLE_FTS5 "Enable version 5 of the full-text search engine")
 option(ENABLE_RTREE "Enable support for the R*Tree index extension")
 option(OMIT_LOAD_EXTENSION "Omits the entire extension loading mechanism from SQLite")
-option(HAVE_FDATASYNC "Use fdatasync() instead of fsync() on unix systems")
-option(HAVE_GMTIME_R "Use the threadsafe gmtime_r()")
-option(HAVE_LOCALTIME_R "Use the threadsafe localtime_r()")
-option(HAVE_POSIX_FALLOCATE "Use posix_fallocate()")
-option(HAVE_STRERROR_R "Use strerror_r()")
-option(HAVE_USLEEP "Use usleep() system call to implement the xSleep method")
 option(ENABLE_MEMSTATUS "Set it to enable the memory usage tracking")
 
-add_library(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/sqlite3.c
-                            ${CMAKE_SOURCE_DIR}/sqlite3.h
-                            ${CMAKE_SOURCE_DIR}/sqlite3ext.h)
+check_symbol_exists(fdatasync "unistd.h" HAVE_FDATASYNC)
+MESSAGE(STATUS "HAVE_FDATASYNC: ${HAVE_FDATASYNC}")
+
+check_symbol_exists(usleep "unistd.h" HAVE_USLEEP)
+MESSAGE(STATUS "HAVE_USLEEP: ${HAVE_USLEEP}")
+
+check_symbol_exists(localtime_r "time.h" HAVE_LOCALTIME_R)
+MESSAGE(STATUS "HAVE_LOCALTIME_R: ${HAVE_LOCALTIME_R}")
+
+check_symbol_exists(gmtime_r "time.h" HAVE_GMTIME_R)
+MESSAGE(STATUS "HAVE_GMTIME_R: ${HAVE_GMTIME_R}")
+
+check_symbol_exists(strerror_r "time.h" HAVE_STRERROR_R)
+MESSAGE(STATUS "HAVE_STRERROR_R: ${HAVE_STRERROR_R}")
+
+check_symbol_exists(posix_fallocate "fcntl.h" HAVE_POSIX_FALLOCATE)
+MESSAGE(STATUS "HAVE_POSIX_FALLOCATE: ${HAVE_POSIX_FALLOCATE}")
+
+file(GLOB SRCS ${CMAKE_SOURCE_DIR}/sqlite3.c
+               ${CMAKE_SOURCE_DIR}/sqlite3.h
+               ${CMAKE_SOURCE_DIR}/sqlite3ext.h)
+
+add_library(${PROJECT_NAME} SHARED ${SRCS})
+add_library(${PROJECT_NAME}_static STATIC ${SRCS})
+
 if (WIN32 AND MSVC AND BUILD_SHARED_LIBS)
     set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-endif(MSVC AND BUILD_SHARED_LIBS)
+    set_target_properties(${PROJECT_NAME}_static PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
 if(ENABLE_JSON1)
     target_compile_definitions(${PROJECT_NAME} PRIVATE SQLITE_ENABLE_JSON1)
+    target_compile_definitions(${PROJECT_NAME}_static PRIVATE SQLITE_ENABLE_JSON1)
 endif()
 if(ENABLE_COLUMN_METADATA)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_COLUMN_METADATA)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_ENABLE_COLUMN_METADATA)
 endif()
 if(ENABLE_EXPLAIN_COMMENTS)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_EXPLAIN_COMMENTS)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_ENABLE_EXPLAIN_COMMENTS)
 endif()
 if(ENABLE_FTS3)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_FTS3)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_ENABLE_FTS3)
 endif()
 if(ENABLE_FTS4)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_FTS4)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_ENABLE_FTS4)
 endif()
 if(ENABLE_FTS5)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_FTS5)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_ENABLE_FTS5)
 endif()
 if(ENABLE_RTREE)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_ENABLE_RTREE)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_ENABLE_RTREE)
 endif()
 if(OMIT_LOAD_EXTENSION)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_OMIT_LOAD_EXTENSION)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_OMIT_LOAD_EXTENSION)
 endif()
 if(HAVE_FDATASYNC)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_FDATASYNC)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE HAVE_FDATASYNC)
 endif()
 if(HAVE_GMTIME_R)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_GMTIME_R)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE HAVE_GMTIME_R)
 endif()
 if(HAVE_LOCALTIME_R)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_LOCALTIME_R)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE HAVE_LOCALTIME_R)
 endif()
 if(HAVE_POSIX_FALLOCATE)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_POSIX_FALLOCATE)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE HAVE_POSIX_FALLOCATE)
 endif()
 if(HAVE_STRERROR_R)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_STRERROR_R)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE HAVE_STRERROR_R)
 endif()
 if(HAVE_USLEEP)
     target_compile_definitions(${PROJECT_NAME}  PRIVATE HAVE_USLEEP)
+    target_compile_definitions(${PROJECT_NAME}_static  PRIVATE HAVE_USLEEP)
 endif()
+
 target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_DEFAULT_MEMSTATUS=${ENABLE_MEMSTATUS})
+target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_DEFAULT_MEMSTATUS=${ENABLE_MEMSTATUS})
+
 target_compile_definitions(${PROJECT_NAME}  PRIVATE SQLITE_THREADSAFE=${THREADSAFE})
+target_compile_definitions(${PROJECT_NAME}_static  PRIVATE SQLITE_THREADSAFE=${THREADSAFE})
 
 install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+install(TARGETS ${PROJECT_NAME}_static
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
